@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviando Localização do Desastre</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7f7f7; }
+        .btn { background-color: #d9534f; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; }
+        .status { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Auto Cadastramento de Desastres</h2>
+    <p>Por favor, clique no botão abaixo para compartilhar a localização exata do ocorrido.</p>
+    <button class="btn" onclick="capturarGps()">Compartilhar Localização GPS</button>
+    <div id="status" class="status"></div>
+
+    <script>
+        // VEJA AQUI: Substitua pelo URL do App da Web que você copiou no Passo 1
+        const URL_DO_SCRIPT = https://script.google.com/macros/s/AKfycbxLgFmMElQHL6wGSxpWeMpbSbUIw8h22H8xoPzGch7Ubvsyy9bvbxFEeuvqcYK2GiQi/exec; 
+
+        function capturarGps() {
+            const status = document.getElementById("status");
+            if (!navigator.geolocation) {
+                status.innerHTML = "Seu navegador não suporta Geolocalização.";
+                return;
+            }
+            status.innerHTML = "Buscando sinal de GPS...";
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    status.innerHTML = "Enviando coordenadas...";
+                    
+                    // Redireciona para o Apps Script enviando a latitude e longitude
+                    window.location.href = `${URL_DO_SCRIPT}?lat=${lat}&lon=${lon}`;
+                },
+                (error) => {
+                    status.innerHTML = "Erro ao obter localização. Certifique-se de ativar o GPS do celular.";
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+    </script>
+</body>
+</html>
